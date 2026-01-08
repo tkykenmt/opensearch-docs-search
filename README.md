@@ -14,7 +14,7 @@ MCP server for searching OpenSearch documentation, blogs, and community forums.
 - 💬 **Forum Search** - Search community forum posts and discussions
 - 🚀 **Fast** - LRU cache (100 entries) for repeated queries
 - 📦 **Zero Config** - Works out of the box with Claude Desktop, Cursor, etc.
-- 🎯 **Version Support** - Search docs for specific OpenSearch versions (default: 3.0)
+- 🎯 **Version Support** - Search docs for specific OpenSearch versions (default: latest)
 
 ## Installation
 
@@ -66,7 +66,7 @@ Search OpenSearch documentation.
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
 | `query` | string | (required) | Search query |
-| `version` | string | "3.0" | OpenSearch version |
+| `version` | string | "latest" | OpenSearch version (e.g., "2.17", "3.0") |
 | `limit` | integer | 10 | Max results per page |
 | `offset` | integer | 0 | Skip first N results for pagination |
 
@@ -74,7 +74,7 @@ Search OpenSearch documentation.
 ```json
 {
   "query": "k-NN",
-  "version": "3.0",
+  "version": "latest",
   "total": 18,
   "hasMore": true,
   "results": [
@@ -95,7 +95,7 @@ Search OpenSearch blog posts.
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
 | `query` | string | (required) | Search query |
-| `version` | string | "3.0" | OpenSearch version |
+| `version` | string | "latest" | OpenSearch version (e.g., "2.17", "3.0") |
 | `limit` | integer | 10 | Max results per page |
 | `offset` | integer | 0 | Skip first N results for pagination |
 
@@ -103,7 +103,7 @@ Search OpenSearch blog posts.
 ```json
 {
   "query": "release",
-  "version": "3.0",
+  "version": "latest",
   "total": 5,
   "hasMore": false,
   "results": [

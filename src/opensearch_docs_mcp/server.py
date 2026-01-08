@@ -64,7 +64,7 @@ def _search_content(query: str, version: str, types: str, limit: int, offset: in
 @mcp.tool()
 def search_docs(
     query: str,
-    version: str = "3.0",
+    version: str = "latest",
     limit: int = 10,
     offset: int = 0,
 ) -> dict:
@@ -72,7 +72,7 @@ def search_docs(
 
     Args:
         query: Search query
-        version: OpenSearch version (default: 3.0)
+        version: OpenSearch version (default: latest)
         limit: Max results per page (default: 10)
         offset: Skip first N results for pagination (default: 0)
     """
@@ -82,7 +82,7 @@ def search_docs(
 @mcp.tool()
 def search_blogs(
     query: str,
-    version: str = "3.0",
+    version: str = "latest",
     limit: int = 10,
     offset: int = 0,
 ) -> dict:
@@ -90,7 +90,7 @@ def search_blogs(
 
     Args:
         query: Search query
-        version: OpenSearch version (default: 3.0)
+        version: OpenSearch version (default: latest)
         limit: Max results per page (default: 10)
         offset: Skip first N results for pagination (default: 0)
     """
