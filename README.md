@@ -1,9 +1,9 @@
-# opensearch-docs-mcp
+# opensearch-docs-search
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-MCP server for searching OpenSearch documentation, blogs, and community forums.
+Search OpenSearch documentation, blogs, and community forums. Available as MCP server and CLI.
 
 > **Note**: This is an unofficial community tool and is not affiliated with or endorsed by the OpenSearch Project.
 
@@ -12,135 +12,106 @@ MCP server for searching OpenSearch documentation, blogs, and community forums.
 - 🔍 **Documentation Search** - Search official OpenSearch docs
 - 📝 **Blog Search** - Search OpenSearch blog posts
 - 💬 **Forum Search** - Search community forum posts and discussions
-- 🚀 **Fast** - LRU cache (100 entries) for repeated queries
-- 📦 **Zero Config** - Works out of the box with Claude Desktop, Cursor, etc.
-- 🎯 **Version Support** - Search docs for specific OpenSearch versions (default: latest)
+- 🚀 **Fast** - LRU cache for repeated queries (MCP mode only)
+- 📦 **Dual Mode** - Use as MCP server or CLI (SKILL)
+- 🎯 **Version Support** - Search docs for specific OpenSearch versions
 
 ## Installation
 
 ```bash
-git clone https://github.com/tkykenmt/opensearch-docs-mcp.git
-cd opensearch-docs-mcp
+git clone https://github.com/enomott/opensearch-docs-search.git
+cd opensearch-docs-search
 uv sync
 ```
 
-## Configuration
+## Usage
 
-### Claude Desktop
+### CLI (SKILL mode)
 
-Add to `claude_desktop_config.json`:
+```bash
+# Search documentation
+uv run opensearch-doc-search docs "k-NN"
+uv run opensearch-doc-search docs "neural search" --version 2.12 --limit 5
+
+# Search blog posts
+uv run opensearch-doc-search blogs "performance"
+
+# Search community forum
+uv run opensearch-doc-search forum "cluster health"
+```
+
+### MCP Server
+
+#### Claude Desktop / Cursor
+
+Add to config:
 
 ```json
 {
   "mcpServers": {
-    "opensearch-docs": {
-      "command": "uv",
-      "args": ["--directory", "/path/to/opensearch-docs-mcp", "run", "opensearch-docs-mcp"]
+    "opensearch-docs-search": {
+      "command": "opensearch-docs-search"
     }
   }
 }
 ```
 
-### Cursor
-
-Add to MCP settings:
+Or with uv:
 
 ```json
 {
   "mcpServers": {
-    "opensearch-docs": {
+    "opensearch-docs-search": {
       "command": "uv",
-      "args": ["--directory", "/path/to/opensearch-docs-mcp", "run", "opensearch-docs-mcp"]
+      "args": ["--directory", "/path/to/opensearch-docs-search", "run", "opensearch-docs-search"]
     }
   }
 }
 ```
 
-## Tools
+### Kiro SKILL
 
-### search_docs
+Add `skill/SKILL.md` path to Kiro's skill configuration.
+
+## Tools / Commands
+
+### search_docs / `docs`
 
 Search OpenSearch documentation.
 
-**Parameters:**
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
 | `query` | string | (required) | Search query |
-| `version` | string | "latest" | OpenSearch version (e.g., "2.17", "3.0") |
-| `limit` | integer | 10 | Max results per page |
-| `offset` | integer | 0 | Skip first N results for pagination |
+| `version` | string | "latest" | OpenSearch version |
+| `limit` | integer | 10 | Max results |
+| `offset` | integer | 0 | Skip N results |
 
-**Example:**
-```json
-{
-  "query": "k-NN",
-  "version": "latest",
-  "total": 18,
-  "hasMore": true,
-  "results": [
-    {
-      "title": "k-NN",
-      "url": "https://docs.opensearch.org/3.0/query-dsl/specialized/k-nn/index/",
-      "snippet": "Use the knn query for running nearest neighbor searches on vector fields."
-    }
-  ]
-}
-```
+### search_blogs / `blogs`
 
-### search_blogs
+Search OpenSearch blog posts. Same parameters as `search_docs`.
 
-Search OpenSearch blog posts.
-
-**Parameters:**
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `query` | string | (required) | Search query |
-| `version` | string | "latest" | OpenSearch version (e.g., "2.17", "3.0") |
-| `limit` | integer | 10 | Max results per page |
-| `offset` | integer | 0 | Skip first N results for pagination |
-
-**Example:**
-```json
-{
-  "query": "release",
-  "version": "latest",
-  "total": 5,
-  "hasMore": false,
-  "results": [
-    {
-      "title": "OpenSearch 3.0 is here!",
-      "url": "https://opensearch.org/blog/opensearch-3-0-is-here/",
-      "snippet": "We are excited to announce the release of OpenSearch 3.0..."
-    }
-  ]
-}
-```
-
-### search_forum
+### search_forum / `forum`
 
 Search OpenSearch community forum.
 
-**Parameters:**
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
 | `query` | string | (required) | Search query |
 | `limit` | integer | 10 | Max results |
 
-**Example:**
+## Output Example
+
 ```json
 {
-  "query": "vector search",
-  "total": 5,
+  "query": "k-NN",
+  "version": "latest",
+  "total": 12,
   "hasMore": true,
   "results": [
     {
-      "title": "Why my OpenSearch vector search is slow",
-      "url": "https://forum.opensearch.org/t/why-my-opensearch-vector-search-is-slow/16166",
-      "author": "Garance",
-      "snippet": "I'm experiencing slow vector search performance...",
-      "created_at": "2023-10-05T17:10:42.440Z",
-      "tags": [],
-      "has_accepted_answer": false
+      "title": "k-NN",
+      "url": "https://docs.opensearch.org/latest/query-dsl/specialized/k-nn/index/",
+      "snippet": "Use the knn query for running nearest neighbor searches..."
     }
   ]
 }
@@ -149,8 +120,8 @@ Search OpenSearch community forum.
 ## Development
 
 ```bash
-# Run in development mode
-uv run mcp dev src/opensearch_docs_mcp/server.py
+# Run MCP server in dev mode
+uv run mcp dev src/opensearch_docs_search/server.py
 
 # Run tests
 uv run pytest tests/ -v
