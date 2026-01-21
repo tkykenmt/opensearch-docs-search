@@ -19,7 +19,13 @@ Search OpenSearch documentation, blogs, and community forums. Available as MCP s
 ## Installation
 
 ```bash
-git clone https://github.com/enomott/opensearch-docs-search.git
+uv tool install git+https://github.com/tkykenmt/opensearch-docs-search
+```
+
+Or for development:
+
+```bash
+git clone https://github.com/tkykenmt/opensearch-docs-search.git
 cd opensearch-docs-search
 uv sync
 ```
@@ -29,41 +35,21 @@ uv sync
 ### CLI (SKILL mode)
 
 ```bash
-# Search documentation
-uv run opensearch-doc-search docs "k-NN"
-uv run opensearch-doc-search docs "neural search" --version 2.12 --limit 5
-
-# Search blog posts
-uv run opensearch-doc-search blogs "performance"
-
-# Search community forum
-uv run opensearch-doc-search forum "cluster health"
+opensearch-doc-search docs "k-NN"
+opensearch-doc-search docs "neural search" --version 2.12 --limit 5
+opensearch-doc-search blogs "performance"
+opensearch-doc-search forum "cluster health"
 ```
 
 ### MCP Server
 
 #### Claude Desktop / Cursor
 
-Add to config:
-
 ```json
 {
   "mcpServers": {
     "opensearch-docs-search": {
       "command": "opensearch-docs-search"
-    }
-  }
-}
-```
-
-Or with uv:
-
-```json
-{
-  "mcpServers": {
-    "opensearch-docs-search": {
-      "command": "uv",
-      "args": ["--directory", "/path/to/opensearch-docs-search", "run", "opensearch-docs-search"]
     }
   }
 }
@@ -120,10 +106,7 @@ Search OpenSearch community forum.
 ## Development
 
 ```bash
-# Run MCP server in dev mode
 uv run mcp dev src/opensearch_docs_search/server.py
-
-# Run tests
 uv run pytest tests/ -v
 ```
 

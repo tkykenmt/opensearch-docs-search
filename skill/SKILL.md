@@ -1,43 +1,38 @@
 ---
 name: opensearch-docs-search
-description: Search OpenSearch documentation, blogs, and community forums
+description: Search OpenSearch documentation, blogs, and community forums. Use when the user asks about OpenSearch features, configuration, APIs, or troubleshooting.
 ---
 
 # OpenSearch Documentation Search
 
-Search OpenSearch documentation, blog posts, and community forum.
-
 ## Setup
 
 ```bash
-cd /path/to/opensearch-docs-search
-uv sync
+uv tool install git+https://github.com/tkykenmt/opensearch-docs-search
 ```
 
 ## Commands
 
-### Search Documentation
-
 ```bash
-uv run opensearch-doc-search docs "k-NN"
-uv run opensearch-doc-search docs "neural search" --version 2.12
-uv run opensearch-doc-search docs "index settings" --limit 5
+opensearch-doc-search docs "k-NN"
+opensearch-doc-search docs "neural search" --version 2.12 --limit 5
+opensearch-doc-search blogs "performance"
+opensearch-doc-search forum "cluster health"
 ```
 
-### Search Blog Posts
+## Output Example
 
-```bash
-uv run opensearch-doc-search blogs "performance"
-uv run opensearch-doc-search blogs "release" --limit 5
+```json
+{
+  "query": "k-NN",
+  "total": 12,
+  "hasMore": true,
+  "results": [
+    {
+      "title": "k-NN",
+      "url": "https://docs.opensearch.org/latest/query-dsl/specialized/k-nn/index/",
+      "snippet": "Use the knn query for running nearest neighbor searches..."
+    }
+  ]
+}
 ```
-
-### Search Community Forum
-
-```bash
-uv run opensearch-doc-search forum "cluster health"
-uv run opensearch-doc-search forum "snapshot" --limit 5
-```
-
-## Output
-
-JSON format with search results including title, URL, and snippet.
