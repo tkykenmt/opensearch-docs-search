@@ -1,38 +1,18 @@
 ---
 name: opensearch-docs-search
-description: Search OpenSearch documentation, blogs, and community forums. Use when the user asks about OpenSearch features, configuration, APIs, or troubleshooting.
+description: Search OpenSearch documentation, blogs, and community forums. Use when the user asks about OpenSearch features, configuration, APIs, troubleshooting, k-NN, neural search, cluster settings, index mappings, query DSL, or any OpenSearch-related questions.
 ---
 
 # OpenSearch Documentation Search
 
-## Setup
+Search OpenSearch docs, blogs, and forum using the bundled script (Python 3.10+, no dependencies).
+
+## Usage
 
 ```bash
-uv tool install git+https://github.com/tkykenmt/opensearch-docs-search
+python scripts/search.py docs "k-NN"
+python scripts/search.py blogs "performance" --limit 5
+python scripts/search.py forum "cluster health"
 ```
 
-## Commands
-
-```bash
-opensearch-doc-search docs "k-NN"
-opensearch-doc-search docs "neural search" --version 2.12 --limit 5
-opensearch-doc-search blogs "performance"
-opensearch-doc-search forum "cluster health"
-```
-
-## Output Example
-
-```json
-{
-  "query": "k-NN",
-  "total": 12,
-  "hasMore": true,
-  "results": [
-    {
-      "title": "k-NN",
-      "url": "https://docs.opensearch.org/latest/query-dsl/specialized/k-nn/index/",
-      "snippet": "Use the knn query for running nearest neighbor searches..."
-    }
-  ]
-}
-```
+Options: `-v/--version` (docs/blogs), `-l/--limit`, `-o/--offset` (docs/blogs)

@@ -3,47 +3,27 @@
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-Search OpenSearch documentation, blogs, and community forums. Available as MCP server and CLI.
+Search OpenSearch documentation, blogs, and community forums.
 
 > **Note**: This is an unofficial community tool and is not affiliated with or endorsed by the OpenSearch Project.
 
-## Features
-
-- 🔍 **Documentation Search** - Search official OpenSearch docs
-- 📝 **Blog Search** - Search OpenSearch blog posts
-- 💬 **Forum Search** - Search community forum posts and discussions
-- 🚀 **Fast** - LRU cache for repeated queries (MCP mode only)
-- 📦 **Dual Mode** - Use as MCP server or CLI (SKILL)
-- 🎯 **Version Support** - Search docs for specific OpenSearch versions
-
 ## Installation
 
-```bash
-uv tool install git+https://github.com/tkykenmt/opensearch-docs-search
-```
+### Agent Skill (Recommended)
 
-Or for development:
+Works with Claude Code, Cursor, Kiro CLI, and [35+ agents](https://www.npmjs.com/package/skills#supported-agents).
 
 ```bash
-git clone https://github.com/tkykenmt/opensearch-docs-search.git
-cd opensearch-docs-search
-uv sync
-```
-
-## Usage
-
-### CLI (SKILL mode)
-
-```bash
-opensearch-doc-search docs "k-NN"
-opensearch-doc-search docs "neural search" --version 2.12 --limit 5
-opensearch-doc-search blogs "performance"
-opensearch-doc-search forum "cluster health"
+npx skills add tkykenmt/opensearch-docs-search
 ```
 
 ### MCP Server
 
-#### Claude Desktop / Cursor
+```bash
+uv tool install git+https://github.com/tkykenmt/opensearch-docs-search[mcp]
+```
+
+Add to your MCP config:
 
 ```json
 {
@@ -55,42 +35,45 @@ opensearch-doc-search forum "cluster health"
 }
 ```
 
-### Kiro SKILL
+### Standalone CLI
 
-Add `skill/SKILL.md` path to Kiro's skill configuration.
+```bash
+uv tool install git+https://github.com/tkykenmt/opensearch-docs-search
+```
 
-## Tools / Commands
+## Usage
 
-### search_docs / `docs`
+### Skill
 
-Search OpenSearch documentation.
+After installation, the agent can use `scripts/search.py`:
 
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `query` | string | (required) | Search query |
-| `version` | string | "latest" | OpenSearch version |
-| `limit` | integer | 10 | Max results |
-| `offset` | integer | 0 | Skip N results |
+```bash
+python scripts/search.py docs "k-NN"
+python scripts/search.py blogs "performance" --limit 5
+python scripts/search.py forum "cluster health"
+```
 
-### search_blogs / `blogs`
+### CLI
 
-Search OpenSearch blog posts. Same parameters as `search_docs`.
+```bash
+opensearch-doc-search docs "k-NN"
+opensearch-doc-search blogs "neural search" --version 2.12 --limit 5
+opensearch-doc-search forum "cluster health"
+```
 
-### search_forum / `forum`
+### Options
 
-Search OpenSearch community forum.
+| Option | Commands | Description |
+|--------|----------|-------------|
+| `-v, --version` | docs, blogs | OpenSearch version (default: latest) |
+| `-l, --limit` | all | Max results (default: 10) |
+| `-o, --offset` | docs, blogs | Skip N results for pagination |
 
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `query` | string | (required) | Search query |
-| `limit` | integer | 10 | Max results |
-
-## Output Example
+## Output
 
 ```json
 {
   "query": "k-NN",
-  "version": "latest",
   "total": 12,
   "hasMore": true,
   "results": [
@@ -103,17 +86,6 @@ Search OpenSearch community forum.
 }
 ```
 
-## Development
-
-```bash
-uv run mcp dev src/opensearch_docs_search/server.py
-uv run pytest tests/ -v
-```
-
 ## License
 
 MIT
-
-## Disclaimer
-
-This project uses the "OpenSearch" name to indicate compatibility with OpenSearch software. OpenSearch is a trademark of the OpenSearch Project. This tool is not affiliated with, endorsed by, or sponsored by the OpenSearch Project or its contributors.

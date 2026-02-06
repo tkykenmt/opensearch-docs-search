@@ -1,6 +1,10 @@
 """OpenSearch Documentation MCP Server."""
 
-from mcp.server.fastmcp import FastMCP
+try:
+    from mcp.server.fastmcp import FastMCP
+except ImportError:
+    raise ImportError("MCP server requires 'mcp' extra: pip install opensearch-docs-search[mcp]")
+
 from .core import search_docs as _search_docs, search_blogs as _search_blogs, search_forum as _search_forum
 
 mcp = FastMCP("opensearch-docs-search")
