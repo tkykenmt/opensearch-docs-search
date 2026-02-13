@@ -16,3 +16,9 @@ python scripts/search.py forum "cluster health"
 ```
 
 Options: `-v/--version` (docs/blogs), `-l/--limit`, `-o/--offset` (docs/blogs)
+
+## Query Tips
+
+- Version search: use dot notation (`"opensearch 3.5"`), not hyphenated slug (`"3-5"`)
+- Blog release posts: search `"opensearch {major}.{minor}"` (e.g., `"opensearch 3.5"`)
+- The `-v/--version` flag filters documentation version, not blog post version. For blogs, include the version number in the query string itself.

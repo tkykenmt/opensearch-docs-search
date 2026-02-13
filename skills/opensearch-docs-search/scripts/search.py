@@ -3,9 +3,15 @@
 
 import argparse
 import json
+import re
 import sys
 import urllib.parse
 import urllib.request
+
+
+def _normalize_version_in_query(query: str) -> str:
+    """Convert hyphenated version patterns (e.g. '3-5') to dot notation ('3.5')."""
+    return re.sub(r'(?<!\w)(\d+)-(\d+)(?!\w)', r'\1.\2', query)
 
 
 def _fetch_docs(query: str, version: str, types: str) -> list:
@@ -37,6 +43,10 @@ def search_docs(query: str, version: str = "latest", limit: int = 10, offset: in
 
 
 def search_blogs(query: str, version: str = "latest", limit: int = 10, offset: int = 0) -> dict:
+    if version != "latest":
+        print(f"Warning: -v/--version is ignored for blog search (got '{version}'). Include version in query instead.", file=sys.stderr)
+        version = "latest"
+    query = _normalize_version_in_query(query)
     all_results = _fetch_docs(query, version, "blogs")
     page = all_results[offset : offset + limit]
     return {
